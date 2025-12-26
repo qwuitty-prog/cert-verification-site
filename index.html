@@ -49,57 +49,6 @@
         }
     </style>
 </head>
-    <!-- Firebase App (compat version) -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<!-- Firebase Realtime Database -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-<script>
-  // Your Firebase config
-  const firebaseConfig = {
-    apiKey: "AIzaSyC18-5xEtoJPZF8x5d6-388rO1IjFO3egs",
-    authDomain: "cert-verification-system-7461a.firebaseapp.com",
-    databaseURL: "https://cert-verification-system-7461a-default-rtdb.firebaseio.com",
-    projectId: "cert-verification-system-7461a",
-    storageBucket: "cert-verification-system-7461a.firebasestorage.app",
-    messagingSenderId: "808661412588",
-    appId: "1:808661412588:web:53e45483ede592c18f13c9"
-  };
-
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-
-  // Reference to database
-  const database = firebase.database();
-
-  // Handle Verify button click
-  const verifyButton = document.querySelector("button");
-  const input = document.querySelector("input");
-
-  verifyButton.addEventListener("click", () => {
-    const certId = input.value.trim();
-    if (!certId) {
-      alert("Please enter a certificate ID.");
-      return;
-    }
-
-    database.ref("Certificate_ID/" + certId).once("value")
-      .then(snapshot => {
-        const data = snapshot.val();
-        if (data) {
-          alert(
-            `Name: ${data.name}\nCourse: ${data.course}\nIssue Date: ${data.issue_date}\nStatus: ${data.Status}`
-          );
-        } else {
-          alert("Certificate not found or invalid ID.");
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        alert("Error fetching certificate data.");
-      });
-  });
-</script>
 <body>
 
 <header>
@@ -110,13 +59,77 @@
 <main>
     <h2>Verify Certificate</h2>
     <p>Enter your certificate ID below to verify authenticity.</p>
-    <input type="text" placeholder="Enter Certificate ID">
-    <button>Verify</button>
+    <input type="text" placeholder="Enter Certificate ID" id="certInput">
+    <button id="verifyBtn">Verify</button>
+    <div id="result" style="margin-top:20px;"></div>
 </main>
 
 <footer>
     © 2025 Certificate Verification System
 </footer>
+
+<!-- Firebase App (compat version) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+    // Your Firebase config
+    const firebaseConfig = {
+        apiKey: "AIzaSyC18-5xEtoJPZF8x5d6-388rO1IjFO3egs",
+        authDomain: "cert-verification-system-7461a.firebaseapp.com",
+        databaseURL: "https://cert-verification-system-7461a-default-rtdb.firebaseio.com",
+        projectId: "cert-verification-system-7461a",
+        storageBucket: "cert-verification-system-7461a.firebasestorage.app",
+        messagingSenderId: "808661412588",
+        appId: "1:808661412588:web:53e45483ede592c18f13c9"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    // Reference to database
+    const database = firebase.database();
+
+    // Select elements
+    const verifyButton = document.getElementById("verifyBtn");
+    const input = document.getElementById("certInput");
+    const resultDiv = document.getElementById("result");
+
+    // Handle Verify button click
+    verifyButton.addEventListener("click", () => {
+        const certId = input.value.trim();
+        if (!certId) {
+            alert("Please enter a certificate ID.");
+            return;
+        }
+
+        // Clear previous result
+        resultDiv.innerHTML = "Verifying...";
+
+        // Query Firebase
+        database.ref("Certificate_ID/" + certId).once("value")
+            .then(snapshot => {
+                const data = snapshot.val();
+                if (data) {
+                    // Show result on page instead of alert
+                    resultDiv.innerHTML = `
+                        <p><strong>Name:</strong> ${data.name}</p>
+                        <p><strong>Course:</strong> ${data.course}</p>
+                        <p><strong>Issue Date:</strong> ${data.issue_date}</p>
+                        <p><strong>Status:</strong> ${data.Status}</p>
+                    `;
+                } else {
+                    resultDiv.innerHTML = "<p style='color:red;'>Certificate not found or invalid ID.</p>";
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                resultDiv.innerHTML = "<p style='color:red;'>Error fetching certificate data.</p>";
+            });
+    });
+});
+</script>
 
 </body>
 </html>
