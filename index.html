@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Certificate Verification Portal</title>
+    <title>Certificate Verification Portal For Coders Verse</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -95,7 +95,8 @@ window.addEventListener("DOMContentLoaded", () => {
     const resultDiv = document.getElementById("result");
 
     verifyButton.addEventListener("click", () => {
-        const certId = input.value.trim(); // Exact match, case-sensitive
+        // Convert input to uppercase for case-insensitive match
+        const certId = input.value.trim().toUpperCase(); 
         if (!certId) {
             resultDiv.innerHTML = "<p style='color:red;'>Please enter a certificate ID.</p>";
             return;
