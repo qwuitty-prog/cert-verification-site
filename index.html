@@ -79,3 +79,51 @@
 window.addEventListener("DOMContentLoaded", () => {
     const firebaseConfig = {
         apiKey: "AIzaSyC18-5xEtoJPZF8x5d6-388rO1IjFO3egs",
+        authDomain: "cert-verification-system-7461a.firebaseapp.com",
+        databaseURL: "https://cert-verification-system-7461a-default-rtdb.firebaseio.com",
+        projectId: "cert-verification-system-7461a",
+        storageBucket: "cert-verification-system-7461a.firebasestorage.app",
+        messagingSenderId: "808661412588",
+        appId: "1:808661412588:web:53e45483ede592c18f13c9"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    const verifyButton = document.getElementById("verifyBtn");
+    const input = document.getElementById("certInput");
+    const resultDiv = document.getElementById("result");
+
+    verifyButton.addEventListener("click", () => {
+        const certId = input.value.trim().toUpperCase(); 
+        if (!certId) {
+            resultDiv.innerHTML = "<p style='color:red;'>Please enter a certificate ID.</p>";
+            return;
+        }
+
+        resultDiv.innerHTML = "Verifying...";
+
+        database.ref("Certificate_ID/" + certId).once("value")
+            .then(snapshot => {
+                const data = snapshot.val();
+                if (data) {
+                    resultDiv.innerHTML = `
+                        <p><strong>Name:</strong> ${data.name}</p>
+                        <p><strong>Course:</strong> ${data.course}</p>
+                        <p><strong>Issue Date:</strong> ${data.issue_date}</p>
+                        <p><strong>Status:</strong> ${data.status}</p>
+                    `;
+                } else {
+                    resultDiv.innerHTML = "<p style='color:red;'>Certificate not found or invalid ID.</p>";
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                resultDiv.innerHTML = "<p style='color:red;'>Error fetching certificate data.</p>";
+            });
+    });
+});
+</script>
+
+</body>
+</html>
