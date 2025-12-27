@@ -44,6 +44,12 @@
         #result {
             margin-top: 20px;
         }
+        #result img {
+            max-width: 100%;
+            margin-top: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
         footer {
             text-align: center;
             margin-top: 40px;
@@ -95,7 +101,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const resultDiv = document.getElementById("result");
 
     verifyButton.addEventListener("click", () => {
-        const certId = input.value.trim().toUpperCase(); 
+        const certId = input.value.trim().toUpperCase();
         if (!certId) {
             resultDiv.innerHTML = "<p style='color:red;'>Please enter a certificate ID.</p>";
             return;
@@ -103,15 +109,22 @@ window.addEventListener("DOMContentLoaded", () => {
 
         resultDiv.innerHTML = "Verifying...";
 
+        // Fetch certificate data from Firebase
         database.ref("Certificate_ID/" + certId).once("value")
             .then(snapshot => {
                 const data = snapshot.val();
                 if (data) {
+                    let imageHTML = '';
+                    if (data.Image_url) {
+                        imageHTML = `<img src="${data.Image_url}" alt="Certificate Image">`;
+                    }
+
                     resultDiv.innerHTML = `
                         <p><strong>Name:</strong> ${data.name}</p>
                         <p><strong>Course:</strong> ${data.course}</p>
                         <p><strong>Issue Date:</strong> ${data.issue_date}</p>
                         <p><strong>Status:</strong> ${data.status}</p>
+                        ${imageHTML}
                     `;
                 } else {
                     resultDiv.innerHTML = "<p style='color:red;'>Certificate not found or invalid ID.</p>";
