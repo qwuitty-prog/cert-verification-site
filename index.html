@@ -14,22 +14,22 @@
         header {
             background-color: #0b5ed7;
             color: white;
-            padding: 20px;
+            padding: 22px;
             text-align: center;
         }
         main {
-            max-width: 600px;
+            max-width: 620px;
             margin: 40px auto;
             background: white;
-            padding: 30px;
-            border-radius: 6px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.12);
         }
         input {
             width: 100%;
             padding: 12px;
             margin-top: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
             font-size: 16px;
         }
         button {
@@ -40,19 +40,57 @@
             color: white;
             border: none;
             cursor: pointer;
-        }
-        #result {
-            margin-top: 20px;
-        }
-        #result img {
-            max-width: 100%;
-            margin-top: 15px;
-            border: 1px solid #ccc;
             border-radius: 4px;
         }
+        button:hover {
+            background-color: #094bb5;
+        }
+
+        /* Result Card */
+        .result-card {
+            margin-top: 25px;
+            border: 2px solid #e3e6ea;
+            border-radius: 8px;
+            padding: 22px;
+            background: #fafbfc;
+            position: relative;
+        }
+        .verified-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .valid {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+        .invalid {
+            background: #f8d7da;
+            color: #842029;
+        }
+        .cert-image {
+            text-align: center;
+            margin-top: 18px;
+        }
+        .cert-image img {
+            max-width: 100%;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        .watermark {
+            margin-top: 18px;
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            font-style: italic;
+        }
+
         footer {
             text-align: center;
-            margin-top: 40px;
+            margin: 40px 0 20px;
             color: #666;
             font-size: 14px;
         }
@@ -74,7 +112,7 @@
 </main>
 
 <footer>
-    © 2025 Certificate Verification System
+    © 2025 Coders Verse · Certificate Verification System
 </footer>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -100,7 +138,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const resultDiv = document.getElementById("result");
 
     verifyButton.addEventListener("click", () => {
-        const certId = input.value.trim(); // <-- removed toUpperCase()
+        const certId = input.value.trim();
         if (!certId) {
             resultDiv.innerHTML = "<p style='color:red;'>Please enter a certificate ID.</p>";
             return;
@@ -111,21 +149,33 @@ window.addEventListener("DOMContentLoaded", () => {
         database.ref("Certificate_ID/" + certId).once("value")
             .then(snapshot => {
                 const data = snapshot.val();
-                if (data) {
-                    let imageHTML = '';
-                    if (data.Image_url) {
-                        imageHTML = `<img src="${data.Image_url}" alt="Certificate Image">`;
-                    }
 
+                if (data) {
                     resultDiv.innerHTML = `
-                        <p><strong>Name:</strong> ${data.name}</p>
-                        <p><strong>Internship Title:</strong> ${data.internship_title}</p>
-                        <p><strong>Issue Date:</strong> ${data.issue_date}</p>
-                        <p><strong>Status:</strong> ${data.status}</p>
-                        ${imageHTML}
+                        <div class="result-card">
+                            <div class="verified-badge valid">✅ Certificate Verified</div>
+
+                            <p><strong>Name:</strong> ${data.name}</p>
+                            <p><strong>Internship Title:</strong> ${data.internship_title}</p>
+                            <p><strong>Issue Date:</strong> ${data.issue_date}</p>
+                            <p><strong>Status:</strong> ${data.status}</p>
+
+                            <div class="cert-image">
+                                <img src="${data.Image_url}" alt="Certificate Image">
+                            </div>
+
+                            <div class="watermark">
+                                Verified via Coders Verse Certificate Portal
+                            </div>
+                        </div>
                     `;
                 } else {
-                    resultDiv.innerHTML = "<p style='color:red;'>Certificate not found or invalid ID.</p>";
+                    resultDiv.innerHTML = `
+                        <div class="result-card">
+                            <div class="verified-badge invalid">❌ Invalid Certificate</div>
+                            <p>The entered certificate ID does not exist in our records.</p>
+                        </div>
+                    `;
                 }
             })
             .catch(err => {
