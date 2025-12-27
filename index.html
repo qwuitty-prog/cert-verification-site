@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Certificate Verification Portal For Coders Verse</title>
+    <title>Internship Certificate Verification Portal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -61,8 +61,8 @@
 <body>
 
 <header>
-    <h1>Certificate Verification Portal</h1>
-    <p>Official credential verification system</p>
+    <h1>Internship Certificate Verification Portal</h1>
+    <p>Official internship credential verification system</p>
 </header>
 
 <main>
@@ -109,7 +109,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
         resultDiv.innerHTML = "Verifying...";
 
-        // Fetch certificate data from Firebase
         database.ref("Certificate_ID/" + certId).once("value")
             .then(snapshot => {
                 const data = snapshot.val();
@@ -121,7 +120,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
                     resultDiv.innerHTML = `
                         <p><strong>Name:</strong> ${data.name}</p>
-                        <p><strong>Course:</strong> ${data.course}</p>
+                        <p><strong>Internship Title:</strong> ${data.internship_title}</p>
                         <p><strong>Issue Date:</strong> ${data.issue_date}</p>
                         <p><strong>Status:</strong> ${data.status}</p>
                         ${imageHTML}
