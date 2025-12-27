@@ -100,7 +100,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const resultDiv = document.getElementById("result");
 
     verifyButton.addEventListener("click", () => {
-        const certId = input.value.trim().toUpperCase();
+        const certId = input.value.trim(); // <-- removed toUpperCase()
         if (!certId) {
             resultDiv.innerHTML = "<p style='color:red;'>Please enter a certificate ID.</p>";
             return;
