@@ -1,152 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Certificate Verification Portal | Coders Verse</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Certificate Verification Portal | Coders Verse</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #0b5ed7;
+            color: white;
+            padding: 22px;
+            text-align: center;
+        }
+        main {
+            max-width: 620px;
+            margin: 40px auto;
+            background: white;
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            margin-bottom: 18px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #0b5ed7;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #094bb5;
+        }
 
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f6f8;
-    margin: 0;
-    padding: 0;
-}
+        /* Result Card */
+        .result-card {
+            margin-top: 25px;
+            border: 2px solid #e3e6ea;
+            border-radius: 8px;
+            padding: 22px;
+            background: #fafbfc;
+            position: relative;
+        }
+        .verified-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .valid {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+        .invalid {
+            background: #f8d7da;
+            color: #842029;
+        }
+        .cert-image {
+            text-align: center;
+            margin-top: 18px;
+        }
+        .cert-image img {
+            max-width: 100%;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        .watermark {
+            margin-top: 18px;
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            font-style: italic;
+        }
 
-header {
-    background-color: #0b5ed7;
-    color: white;
-    padding: 22px;
-    text-align: center;
-}
-
-main {
-    max-width: 650px;
-    margin: 40px auto;
-    background: white;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.1);
-}
-
-input {
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    margin-bottom: 20px;
-    font-size: 16px;
-}
-
-button {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    background-color: #0b5ed7;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-button:hover {
-    background-color: #084298;
-}
-
-#result {
-    margin-top: 25px;
-    animation: fadeIn 0.4s ease-in;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* VERIFIED CARD */
-.verify-card {
-    border: 2px solid #28a745;
-    border-radius: 8px;
-    padding: 20px;
-    background: #f9fffb;
-}
-
-.status-badge {
-    display: inline-block;
-    padding: 6px 14px;
-    font-weight: bold;
-    border-radius: 20px;
-    margin-bottom: 15px;
-}
-
-.valid {
-    background-color: #28a745;
-    color: white;
-}
-
-.invalid {
-    background-color: #dc3545;
-    color: white;
-}
-
-.cert-image {
-    display: block;
-    max-width: 100%;
-    margin: 20px auto;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-}
-
-.watermark {
-    text-align: center;
-    font-size: 12px;
-    color: #777;
-    margin-top: 10px;
-}
-
-.print-btn {
-    margin-top: 20px;
-    background-color: #198754;
-}
-
-footer {
-    text-align: center;
-    margin: 40px 0;
-    color: #666;
-    font-size: 14px;
-}
-
-/* PRINT MODE */
-@media print {
-    header, input, button, footer {
-        display: none;
-    }
-    main {
-        box-shadow: none;
-        margin: 0;
-    }
-}
-</style>
+        footer {
+            text-align: center;
+            margin: 40px 0 20px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
 </head>
-
 <body>
 
 <header>
     <h1>Certificate Verification Portal</h1>
-    <p>Official credential verification system</p>
+    <p>Official Certificate Authentication System</p>
 </header>
 
 <main>
-    <h2>Verify Certificate</h2>
-    <p>Enter the Certificate ID exactly as provided.</p>
-
-    <input type="text" id="certInput" placeholder="e.g. CV-CERT-A1B2 (just an Example)">
-    <button id="verifyBtn">Verify</button>
-
+    <h2>Certificate Validation</h2>
+    <p>Please enter the Certificate ID exactly as issued.</p>
+    <p><em>Format example: CV-CERT-A1B2</em></p>
+    <input type="text" placeholder="Enter Certificate ID" id="certInput">
+    <button id="verifyBtn">Verify Certificate</button>
     <div id="result"></div>
 </main>
 
 <footer>
-    © 2025 Coders Verse Certificate Verification System
+    © 2025 Coders Verse · Certificate Verification & Authentication System
 </footer>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -154,7 +121,6 @@ footer {
 
 <script>
 window.addEventListener("DOMContentLoaded", () => {
-
     const firebaseConfig = {
         apiKey: "AIzaSyC18-5xEtoJPZF8x5d6-388rO1IjFO3egs",
         authDomain: "cert-verification-system-7461a.firebaseapp.com",
@@ -168,56 +134,56 @@ window.addEventListener("DOMContentLoaded", () => {
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    const verifyBtn = document.getElementById("verifyBtn");
+    const verifyButton = document.getElementById("verifyBtn");
     const input = document.getElementById("certInput");
     const resultDiv = document.getElementById("result");
 
-    verifyBtn.addEventListener("click", () => {
+    verifyButton.addEventListener("click", () => {
         const certId = input.value.trim();
         if (!certId) {
             resultDiv.innerHTML = "<p style='color:red;'>Please enter a certificate ID.</p>";
             return;
         }
 
-        resultDiv.innerHTML = "<p>Verifying certificate...</p>";
+        resultDiv.innerHTML = "Verifying...";
 
         database.ref("Certificate_ID/" + certId).once("value")
-        .then(snapshot => {
-            const data = snapshot.val();
+            .then(snapshot => {
+                const data = snapshot.val();
 
-            if (data) {
-                resultDiv.innerHTML = `
-                    <div class="verify-card">
-                        <div class="status-badge valid">✅ CERTIFICATE VERIFIED</div>
+                if (data) {
+                    resultDiv.innerHTML = `
+                        <div class="result-card">
+                            <div class="verified-badge valid">✅ Certificate Verified</div>
 
-                        <p><strong>Name:</strong> ${data.name}</p>
-                        <p><strong>Internship Title:</strong> ${data.internship_title}</p>
-                        <p><strong>Issue Date:</strong> ${data.issue_date}</p>
-                        <p><strong>Status:</strong> ${data.status}</p>
+                            <p><strong>Name:</strong> ${data.name}</p>
+                            <p><strong>Internship Title:</strong> ${data.internship_title}</p>
+                            <p><strong>Issue Date:</strong> ${data.issue_date}</p>
+                            <p><strong>Status:</strong> ${data.status}</p>
 
-                        <img class="cert-image" src="${data.Image_url}" alt="Certificate Image">
+                            <div class="cert-image">
+                                <img src="${data.Image_url}" alt="Certificate Image">
+                            </div>
 
-                        <div class="watermark">
-                            Verified via Coders Verse Certificate Portal
+                            <div class="watermark">
+                                Verified via Coders Verse Certificate Portal
+                            </div>
                         </div>
-
-                        <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
-                    </div>
-                `;
-            } else {
-                resultDiv.innerHTML = `
-                    <div class="verify-card" style="border-color:#dc3545;background:#fff5f5;">
-                        <div class="status-badge invalid">❌ INVALID CERTIFICATE</div>
-                        <p>This certificate ID does not exist or is invalid.</p>
-                    </div>
-                `;
-            }
-        })
-        .catch(() => {
-            resultDiv.innerHTML = "<p style='color:red;'>Error verifying certificate.</p>";
-        });
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="result-card">
+                            <div class="verified-badge invalid">❌ Invalid Certificate</div>
+                            <p>The entered certificate ID does not exist in our records.</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                resultDiv.innerHTML = "<p style='color:red;'>Error fetching certificate data.</p>";
+            });
     });
-
 });
 </script>
 
