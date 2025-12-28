@@ -175,6 +175,28 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
 
+        /* Subtle processing indicator */
+        .processing {
+            margin-top: 14px;
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .processing span {
+            display: inline-block;
+            width: 16px;
+            text-align: left;
+            animation: dots 1.4s infinite steps(3, end);
+        }
+
+        @keyframes dots {
+            0%, 20% { content: ""; }
+            40% { content: "."; }
+            60% { content: ".."; }
+            80%, 100% { content: "..."; }
+        }
+
         footer {
             text-align: center;
             margin: 40px 0 26px;
@@ -244,7 +266,8 @@ window.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        resultDiv.innerHTML = "<p>Verifying certificate…</p>";
+        // Subtle processing indicator
+        resultDiv.innerHTML = `<div class="processing">Checking official records<span>...</span></div>`;
 
         database.ref("Certificate_ID/" + certId).once("value")
             .then(snapshot => {
