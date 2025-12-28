@@ -21,47 +21,27 @@
         header {
             background: linear-gradient(135deg, #0b5ed7, #084298);
             color: white;
-            padding: 28px 20px;
+            padding: 32px 20px;
             text-align: center;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            margin-bottom: 10px;
-        }
-
-        .logo {
-            width: 52px;
-            height: 52px;
-            background: white;
-            color: #0b5ed7;
-            font-weight: bold;
-            font-size: 20px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         header h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 26px;
+            font-weight: 600;
         }
 
         header p {
-            margin: 6px 0 0;
+            margin: 8px 0 0;
             font-size: 14px;
             opacity: 0.9;
         }
 
         main {
             max-width: 640px;
-            margin: 40px auto;
+            margin: 42px auto;
             background: white;
-            padding: 34px;
+            padding: 36px;
             border-radius: 12px;
             box-shadow: 0 8px 22px rgba(0,0,0,0.12);
         }
@@ -69,6 +49,7 @@
         main h2 {
             margin-top: 0;
             font-size: 22px;
+            font-weight: 600;
         }
 
         main p {
@@ -76,10 +57,16 @@
             color: #555;
         }
 
+        .hint {
+            font-size: 13px;
+            color: #777;
+            margin-bottom: 10px;
+        }
+
         input {
             width: 100%;
             padding: 14px;
-            margin-top: 12px;
+            margin-top: 10px;
             margin-bottom: 18px;
             font-size: 16px;
             border: 1px solid #ccc;
@@ -113,12 +100,12 @@
 
         /* Result Card */
         .result-card {
-            margin-top: 26px;
+            margin-top: 28px;
             border: 2px solid #e3e6ea;
             border-radius: 12px;
             padding: 26px;
             background: #fafbfc;
-            animation: fadeIn 0.4s ease-in-out;
+            animation: fadeIn 0.35s ease-in-out;
         }
 
         @keyframes fadeIn {
@@ -135,10 +122,9 @@
         .verified-badge {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
             padding: 6px 14px;
             border-radius: 20px;
-            font-weight: bold;
+            font-weight: 600;
             font-size: 14px;
             margin-bottom: 16px;
         }
@@ -177,29 +163,21 @@
             font-style: italic;
         }
 
-        .trust {
+        .disclaimer {
             max-width: 640px;
-            margin: 22px auto;
-            background: white;
-            padding: 22px;
-            border-radius: 12px;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-            font-size: 14px;
-        }
-
-        .trust h3 {
-            margin-top: 0;
-            font-size: 16px;
-        }
-
-        .trust ul {
-            padding-left: 18px;
-            color: #444;
+            margin: 18px auto;
+            padding: 16px 22px;
+            font-size: 13px;
+            color: #666;
+            background: #ffffff;
+            border-left: 4px solid #0b5ed7;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
 
         footer {
             text-align: center;
-            margin: 36px 0 24px;
+            margin: 40px 0 26px;
             color: #666;
             font-size: 14px;
         }
@@ -209,19 +187,16 @@
 <body>
 
 <header>
-    <div class="brand">
-        <div class="logo">CV</div>
-        <div>
-            <h1>Coders Verse</h1>
-            <p>Official Certificate Verification System</p>
-        </div>
-    </div>
+    <h1>Coders Verse</h1>
+    <p>Official Certificate Verification Portal</p>
 </header>
 
 <main>
-    <h2>Certificate Validation</h2>
-    <p>Please enter the Certificate ID exactly as issued.</p>
-    <p><em>Example: CV-CERT-A8I9</em></p>
+    <h2>Certificate Verification</h2>
+    <p>Please enter the Certificate ID exactly as provided on the certificate.</p>
+    <div class="hint">
+        Certificate IDs are case-sensitive and must be entered without extra spaces.
+    </div>
 
     <input type="text" placeholder="Enter Certificate ID" id="certInput">
     <button id="verifyBtn">Verify Certificate</button>
@@ -229,17 +204,13 @@
     <div id="result"></div>
 </main>
 
-<section class="trust">
-    <h3>Why this verification is reliable</h3>
-    <ul>
-        <li>All certificates are stored securely in Firebase</li>
-        <li>Each Certificate ID is uniquely issued and immutable</li>
-        <li>Records cannot be altered after issuance</li>
-    </ul>
-</section>
+<div class="disclaimer">
+    This portal is intended solely for verification of certificates issued by Coders Verse.
+    Verification results are retrieved directly from official issuance records.
+</div>
 
 <footer>
-    © 2025 Coders Verse · Certificate Verification & Authentication System
+    © 2025 Coders Verse · Certificate Verification System
 </footer>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -273,7 +244,7 @@ window.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        resultDiv.innerHTML = "<p>Verifying certificate...</p>";
+        resultDiv.innerHTML = "<p>Verifying certificate…</p>";
 
         database.ref("Certificate_ID/" + certId).once("value")
             .then(snapshot => {
@@ -282,7 +253,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 if (data) {
                     resultDiv.innerHTML = `
                         <div class="result-card">
-                            <div class="verified-badge valid">✔ Verified Certificate</div>
+                            <div class="verified-badge valid">Verified Certificate</div>
 
                             <p><strong>Name:</strong> ${data.name}</p>
                             <p><strong>Internship Title:</strong> ${data.internship_title}</p>
@@ -294,15 +265,15 @@ window.addEventListener("DOMContentLoaded", () => {
                             </div>
 
                             <div class="watermark">
-                                Verified via Coders Verse Certificate Portal
+                                Verified through Coders Verse Certificate System
                             </div>
                         </div>
                     `;
                 } else {
                     resultDiv.innerHTML = `
                         <div class="result-card">
-                            <div class="verified-badge invalid">✖ Invalid Certificate</div>
-                            <p>The entered certificate ID does not exist in our records.</p>
+                            <div class="verified-badge invalid">Invalid Certificate</div>
+                            <p>The entered Certificate ID does not exist in official records.</p>
                         </div>
                     `;
                 }
