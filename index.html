@@ -17,9 +17,25 @@
 
         header {
             padding: 34px 20px;
-            text-align: center;
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: #fff;
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+        }
+
+        .header-inner img {
+            height: 42px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .header-text {
+            text-align: left;
         }
 
         header h1 {
@@ -29,7 +45,7 @@
         }
 
         header p {
-            margin-top: 8px;
+            margin-top: 6px;
             font-size: 14px;
             opacity: 0.9;
         }
@@ -140,13 +156,6 @@
             border: 1px solid #ccc;
         }
 
-        footer {
-            margin: 40px 0 24px;
-            text-align: center;
-            font-size: 13px;
-            color: #666;
-        }
-
         .legal {
             max-width: 640px;
             margin: 20px auto;
@@ -158,29 +167,41 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
             color: #555;
         }
+
+        footer {
+            margin: 40px 0 24px;
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+        }
     </style>
 </head>
 
 <body>
 
 <script>
-/* ========= INSTITUTE CONFIG (ONLY THING YOU CHANGE PER CLIENT) ========= */
+/* ========= INSTITUTE CONFIG ========= */
 const INSTITUTE = {
     name: "Coders Verse",
     tagline: "Official Certificate Verification Portal",
+    logo: "https://raw.githubusercontent.com/qwuitty-prog/cert-verification-site/main/MyFolder/CodersVerse%20Logo.png",
     primaryColor: "#2563eb",
     primaryDark: "#1e40af",
     footer: "© 2025 Coders Verse. All rights reserved."
 };
 
-/* Apply branding */
 document.documentElement.style.setProperty("--primary", INSTITUTE.primaryColor);
 document.documentElement.style.setProperty("--primary-dark", INSTITUTE.primaryDark);
 </script>
 
 <header>
-    <h1 id="instName"></h1>
-    <p id="instTagline"></p>
+    <div class="header-inner">
+        <img id="instLogo" alt="Institute Logo">
+        <div class="header-text">
+            <h1 id="instName"></h1>
+            <p id="instTagline"></p>
+        </div>
+    </div>
 </header>
 
 <main>
@@ -195,7 +216,7 @@ document.documentElement.style.setProperty("--primary-dark", INSTITUTE.primaryDa
 </main>
 
 <div class="legal">
-    This portal verifies certificates issued by Coders Verse.
+    This portal verifies certificates issued by the institute named above.
     Verification data is retrieved directly from official issuance records.
 </div>
 
@@ -208,6 +229,10 @@ document.documentElement.style.setProperty("--primary-dark", INSTITUTE.primaryDa
 document.getElementById("instName").textContent = INSTITUTE.name;
 document.getElementById("instTagline").textContent = INSTITUTE.tagline;
 document.getElementById("footerText").textContent = INSTITUTE.footer;
+
+const logoEl = document.getElementById("instLogo");
+if(INSTITUTE.logo) logoEl.src = INSTITUTE.logo;
+else logoEl.style.display = "none";
 
 const firebaseConfig = {
     apiKey: "AIzaSyC18-5xEtoJPZF8x5d6-388rO1IjFO3egs",
@@ -229,7 +254,7 @@ const validId = /^[A-Za-z0-9\-]+$/;
 
 btn.addEventListener("click", verify);
 input.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
+    if(e.key === "Enter") {
         e.preventDefault();
         verify();
     }
@@ -237,46 +262,37 @@ input.addEventListener("keydown", e => {
 
 function verify() {
     const id = input.value.trim();
-
-    if (!id) {
-        result.innerHTML = "<p style='color:red;'>Please enter a certificate ID.</p>";
-        return;
-    }
-
-    if (!validId.test(id)) {
-        result.innerHTML = "<p style='color:red;'>Invalid certificate ID format.</p>";
-        return;
-    }
+    if(!id) { result.innerHTML = "<p style='color:red;'>Please enter a certificate ID.</p>"; return; }
+    if(!validId.test(id)) { result.innerHTML = "<p style='color:red;'>Invalid certificate ID format.</p>"; return; }
 
     result.innerHTML = "<div class='processing'>Checking official records…</div>";
 
     db.ref("Certificate_ID/" + id).once("value")
-        .then(snap => {
-            const d = snap.val();
-            if (!d) {
-                result.innerHTML = `
-                    <div class="result-card">
-                        <div class="badge invalid">Invalid Certificate</div>
-                        <p>No record found for the entered Certificate ID.</p>
-                    </div>`;
-                return;
-            }
-
-            result.innerHTML = `
+      .then(snap => {
+          const d = snap.val();
+          if(!d) {
+              result.innerHTML = `
                 <div class="result-card">
-                    <div class="badge valid">Verified Certificate</div>
-                    <p><strong>Name:</strong> ${d.name}</p>
-                    <p><strong>Program:</strong> ${d.internship_title}</p>
-                    <p><strong>Issue Date:</strong> ${d.issue_date}</p>
-                    <p><strong>Status:</strong> ${d.status}</p>
-                    <div class="cert-image">
-                        <img src="${d.Image_url}" alt="Certificate">
-                    </div>
+                    <div class="badge invalid">Invalid Certificate</div>
+                    <p>No record found for the entered Certificate ID.</p>
                 </div>`;
-        })
-        .catch(() => {
-            result.innerHTML = "<p style='color:red;'>Unable to verify at this time.</p>";
-        });
+              return;
+          }
+          result.innerHTML = `
+            <div class="result-card">
+                <div class="badge valid">Verified Certificate</div>
+                <p><strong>Name:</strong> ${d.name}</p>
+                <p><strong>Program:</strong> ${d.internship_title}</p>
+                <p><strong>Issue Date:</strong> ${d.issue_date}</p>
+                <p><strong>Status:</strong> ${d.status}</p>
+                <div class="cert-image">
+                    <img src="${d.Image_url}" alt="Certificate">
+                </div>
+            </div>`;
+      })
+      .catch(() => {
+          result.innerHTML = "<p style='color:red;'>Unable to verify at this time.</p>";
+      });
 }
 </script>
 
