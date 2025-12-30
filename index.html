@@ -29,7 +29,7 @@
         }
 
         .header-inner img {
-            height: 65px;
+            height: 65px; /* Updated logo size */
             width: auto;
             object-fit: contain;
         }
@@ -168,11 +168,26 @@
             color: #555;
         }
 
+        .legal a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
         footer {
             margin: 40px 0 24px;
             text-align: center;
             font-size: 13px;
             color: #666;
+        }
+
+        footer a {
+            color: #666;
+            text-decoration: none;
+            margin: 0 6px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -187,7 +202,9 @@ const INSTITUTE = {
     logo: "https://raw.githubusercontent.com/qwuitty-prog/cert-verification-site/main/MyFolder/CodersVerse%20Logo.png",
     primaryColor: "#2563eb",
     primaryDark: "#1e40af",
-    footer: "© 2025 Coders Verse. All rights reserved."
+    footer: "© 2025 Coders Verse. All rights reserved.",
+    email: "careers.coders.verse",
+    instagram: "https://instagram.com/coders.verse"
 };
 
 document.documentElement.style.setProperty("--primary", INSTITUTE.primaryColor);
@@ -217,10 +234,15 @@ document.documentElement.style.setProperty("--primary-dark", INSTITUTE.primaryDa
 
 <div class="legal">
     This portal verifies certificates issued by the institute named above.
-    Verification data is retrieved directly from official issuance records.
+    Verification data is retrieved directly from official issuance records.<br>
+    Contact: <a href="mailto:careers.coders.verse">careers.coders.verse</a> | Instagram: <a href="https://instagram.com/coders.verse" target="_blank">@coders.verse</a>
 </div>
 
-<footer id="footerText"></footer>
+<footer id="footerText">
+    © 2025 Coders Verse. All rights reserved. &nbsp;|&nbsp;
+    <a href="mailto:careers.coders.verse">Email</a> &nbsp;|&nbsp;
+    <a href="https://instagram.com/coders.verse" target="_blank">Instagram</a>
+</footer>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -228,11 +250,12 @@ document.documentElement.style.setProperty("--primary-dark", INSTITUTE.primaryDa
 <script>
 document.getElementById("instName").textContent = INSTITUTE.name;
 document.getElementById("instTagline").textContent = INSTITUTE.tagline;
-document.getElementById("footerText").textContent = INSTITUTE.footer;
 
 const logoEl = document.getElementById("instLogo");
 if(INSTITUTE.logo) logoEl.src = INSTITUTE.logo;
 else logoEl.style.display = "none";
+
+document.getElementById("footerText").textContent = INSTITUTE.footer;
 
 const firebaseConfig = {
     apiKey: "AIzaSyC18-5xEtoJPZF8x5d6-388rO1IjFO3egs",
@@ -281,20 +304,4 @@ function verify() {
           result.innerHTML = `
             <div class="result-card">
                 <div class="badge valid">Verified Certificate</div>
-                <p><strong>Name:</strong> ${d.name}</p>
-                <p><strong>Program:</strong> ${d.internship_title}</p>
-                <p><strong>Issue Date:</strong> ${d.issue_date}</p>
-                <p><strong>Status:</strong> ${d.status}</p>
-                <div class="cert-image">
-                    <img src="${d.Image_url}" alt="Certificate">
-                </div>
-            </div>`;
-      })
-      .catch(() => {
-          result.innerHTML = "<p style='color:red;'>Unable to verify at this time.</p>";
-      });
-}
-</script>
-
-</body>
-</html>
+                <p><strong>Name:</s
