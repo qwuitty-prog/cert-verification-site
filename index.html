@@ -60,7 +60,6 @@
 
         button:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
 
-        /* Result Card */
         .result-card {
             margin-top: 28px;
             border: 2px solid #e3e6ea;
@@ -101,12 +100,12 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.06);
         }
 
-        /* Subtle processing indicator */
         .processing { margin-top: 14px; font-size: 14px; color: #666; font-style: italic; }
         .processing span::after {
             content: ""; display: inline-block; width: 1ch;
             text-align: left; animation: dots 1s steps(3, end) infinite;
         }
+
         @keyframes dots {
             0% { content: ""; }
             33% { content: "."; }
@@ -170,24 +169,29 @@ window.addEventListener("DOMContentLoaded", () => {
     const input = document.getElementById("certInput");
     const resultDiv = document.getElementById("result");
 
-    const validCertId = /^[A-Za-z0-9\-]+$/; // only letters, numbers, dash
+    const validCertId = /^[A-Za-z0-9\-]+$/;
+
+    /* ✅ ENTER KEY SUPPORT (only addition) */
+    input.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            verifyButton.click();
+        }
+    });
 
     verifyButton.addEventListener("click", () => {
         const certId = input.value.trim();
 
-        // Empty input check
         if (!certId) {
             resultDiv.innerHTML = "<p style='color:red;'>Please enter a certificate ID.</p>";
             return;
         }
 
-        // Invalid characters check
         if (!validCertId.test(certId)) {
             resultDiv.innerHTML = "<p style='color:red;'>Invalid characters in certificate ID.</p>";
             return;
         }
 
-        // Subtle processing indicator
         resultDiv.innerHTML = `<div class="processing">Checking official records<span></span></div>`;
 
         database.ref("Certificate_ID/" + certId).once("value")
