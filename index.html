@@ -1,267 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Certificate Verification</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <title>Certificate Verification</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-:root {
-    --primary: #0b5ed7;
-    --primary-dark: #084298;
-    --bg: #f4f6f8;
-    --text: #222;
-    --muted: #666;
-}
+    <style>
+        * { box-sizing: border-box; }
 
-* { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(180deg, #f4f6f8, #eef1f4);
+            color: #222;
+        }
 
-body {
-    margin: 0;
-    font-family: "Segoe UI", Arial, sans-serif;
-    background: linear-gradient(180deg, var(--bg), #eef1f4);
-    color: var(--text);
-}
+        header {
+            padding: 34px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+        }
 
-header {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    color: white;
-    padding: 32px 20px;
-    text-align: center;
-}
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
 
-header img {
-    max-height: 60px;
-    margin-bottom: 10px;
-}
+        header p {
+            margin-top: 8px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
 
-header h1 {
-    margin: 0;
-    font-size: 26px;
-    font-weight: 600;
-}
+        main {
+            max-width: 640px;
+            margin: 42px auto;
+            background: #fff;
+            padding: 36px;
+            border-radius: 14px;
+            box-shadow: 0 10px 26px rgba(0,0,0,0.12);
+        }
 
-header p {
-    margin: 6px 0 0;
-    font-size: 14px;
-    opacity: 0.9;
-}
+        main h2 {
+            margin-top: 0;
+            font-size: 22px;
+            font-weight: 600;
+        }
 
-main {
-    max-width: 680px;
-    margin: 40px auto;
-    background: white;
-    padding: 36px;
-    border-radius: 14px;
-    box-shadow: 0 10px 26px rgba(0,0,0,0.12);
-}
+        main p {
+            font-size: 14px;
+            color: #555;
+        }
 
-h2 {
-    margin-top: 0;
-    font-size: 22px;
-}
+        .hint {
+            font-size: 13px;
+            color: #777;
+            margin-bottom: 12px;
+        }
 
-p {
-    font-size: 14px;
-    color: var(--muted);
-}
+        input {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            margin-bottom: 18px;
+        }
 
-input {
-    width: 100%;
-    padding: 14px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    margin: 14px 0 18px;
-}
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+        }
 
-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(11,94,215,0.15);
-}
+        button {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        }
 
-button {
-    width: 100%;
-    padding: 14px;
-    font-size: 16px;
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-}
+        button:hover {
+            opacity: 0.95;
+        }
 
-button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
-}
+        .processing {
+            margin-top: 14px;
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
 
-.result-card {
-    margin-top: 30px;
-    border: 2px solid #e3e6ea;
-    border-radius: 12px;
-    padding: 26px;
-    background: #fafbfc;
-}
+        .result-card {
+            margin-top: 26px;
+            padding: 26px;
+            border-radius: 12px;
+            background: #fafbfc;
+            border: 2px solid #e3e6ea;
+            animation: fadeIn 0.35s ease-in-out;
+        }
 
-.badge {
-    display: inline-block;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 14px;
-    margin-bottom: 16px;
-}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-.valid { background: #d1e7dd; color: #0f5132; }
-.invalid { background: #f8d7da; color: #842029; }
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
 
-.cert-image {
-    text-align: center;
-    margin-top: 20px;
-}
+        .valid { background: #d1e7dd; color: #0f5132; }
+        .invalid { background: #f8d7da; color: #842029; }
 
-.cert-image img {
-    max-width: 100%;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-}
+        .result-card p {
+            margin: 8px 0;
+            font-size: 15px;
+        }
 
-.processing {
-    font-style: italic;
-    color: var(--muted);
-}
+        .cert-image {
+            margin-top: 18px;
+            text-align: center;
+        }
 
-footer {
-    max-width: 680px;
-    margin: 20px auto 40px;
-    padding: 14px 20px;
-    font-size: 13px;
-    color: #777;
-    text-align: center;
-}
-</style>
+        .cert-image img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        footer {
+            margin: 40px 0 24px;
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .legal {
+            max-width: 640px;
+            margin: 20px auto;
+            padding: 16px 22px;
+            font-size: 13px;
+            background: #fff;
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            color: #555;
+        }
+    </style>
 </head>
 
 <body>
 
-<header id="header">
-    <img id="logo" style="display:none;" />
-    <h1 id="instName">Certificate Verification</h1>
-    <p id="instTagline">Official Verification Portal</p>
+<script>
+/* ========= INSTITUTE CONFIG (ONLY THING YOU CHANGE PER CLIENT) ========= */
+const INSTITUTE = {
+    name: "Coders Verse",
+    tagline: "Official Certificate Verification Portal",
+    primaryColor: "#2563eb",
+    primaryDark: "#1e40af",
+    footer: "© 2025 Coders Verse. All rights reserved."
+};
+
+/* Apply branding */
+document.documentElement.style.setProperty("--primary", INSTITUTE.primaryColor);
+document.documentElement.style.setProperty("--primary-dark", INSTITUTE.primaryDark);
+</script>
+
+<header>
+    <h1 id="instName"></h1>
+    <p id="instTagline"></p>
 </header>
 
 <main>
-    <h2>Verify Certificate</h2>
-    <p>Enter the Certificate ID exactly as mentioned on the certificate.</p>
+    <h2>Certificate Verification</h2>
+    <p>Enter the Certificate ID exactly as mentioned on the issued certificate.</p>
+    <div class="hint">Certificate IDs are case-sensitive.</div>
 
-    <input id="certInput" placeholder="Certificate ID" />
+    <input type="text" id="certInput" placeholder="Enter Certificate ID">
     <button id="verifyBtn">Verify Certificate</button>
 
     <div id="result"></div>
 </main>
 
-<footer id="footerText">
-    This verification confirms issuance by the respective institute.
-</footer>
+<div class="legal">
+    This portal verifies certificates issued by the institute named above.
+    Verification data is retrieved directly from official issuance records.
+</div>
+
+<footer id="footerText"></footer>
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
-window.addEventListener("DOMContentLoaded", () => {
+document.getElementById("instName").textContent = INSTITUTE.name;
+document.getElementById("instTagline").textContent = INSTITUTE.tagline;
+document.getElementById("footerText").textContent = INSTITUTE.footer;
 
-    /* ---------- Firebase ---------- */
-    firebase.initializeApp({
-        apiKey: "AIzaSyC18-5xEtoJPZF8x5d6-388rO1IjFO3egs",
-        authDomain: "cert-verification-system-7461a.firebaseapp.com",
-        databaseURL: "https://cert-verification-system-7461a-default-rtdb.firebaseio.com",
-        projectId: "cert-verification-system-7461a"
-    });
+const firebaseConfig = {
+    apiKey: "AIzaSyC18-5xEtoJPZF8x5d6-388rO1IjFO3egs",
+    authDomain: "cert-verification-system-7461a.firebaseapp.com",
+    databaseURL: "https://cert-verification-system-7461a-default-rtdb.firebaseio.com",
+    projectId: "cert-verification-system-7461a",
+    storageBucket: "cert-verification-system-7461a.firebasestorage.app",
+    messagingSenderId: "808661412588",
+    appId: "1:808661412588:web:53e45483ede592c18f13c9"
+};
 
-    const db = firebase.database();
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-    /* ---------- Institute Slug ---------- */
-    const slug = location.pathname.split("/").filter(Boolean)[0];
-    if (!slug) {
-        document.body.innerHTML = "<h2 style='text-align:center;margin-top:60px'>Invalid institute link</h2>";
+const input = document.getElementById("certInput");
+const btn = document.getElementById("verifyBtn");
+const result = document.getElementById("result");
+const validId = /^[A-Za-z0-9\-]+$/;
+
+btn.addEventListener("click", verify);
+input.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        verify();
+    }
+});
+
+function verify() {
+    const id = input.value.trim();
+
+    if (!id) {
+        result.innerHTML = "<p style='color:red;'>Please enter a certificate ID.</p>";
         return;
     }
 
-    /* ---------- Branding ---------- */
-    db.ref(`institutes/${slug}/branding`).once("value").then(snap => {
-        const b = snap.val();
-        if (!b) return;
+    if (!validId.test(id)) {
+        result.innerHTML = "<p style='color:red;'>Invalid certificate ID format.</p>";
+        return;
+    }
 
-        document.title = `Certificate Verification | ${b.name}`;
-        document.getElementById("instName").textContent = b.name;
-        document.getElementById("instTagline").textContent = b.tagline || "Official Certificate Verification";
+    result.innerHTML = "<div class='processing'>Checking official records…</div>";
 
-        if (b.logo) {
-            const logo = document.getElementById("logo");
-            logo.src = b.logo;
-            logo.style.display = "block";
-        }
-
-        if (b.primary) {
-            document.documentElement.style.setProperty("--primary", b.primary);
-            document.documentElement.style.setProperty("--primary-dark", b.primaryDark || b.primary);
-        }
-
-        if (b.footer) {
-            document.getElementById("footerText").textContent = b.footer;
-        }
-    });
-
-    /* ---------- Verification ---------- */
-    const input = document.getElementById("certInput");
-    const btn = document.getElementById("verifyBtn");
-    const result = document.getElementById("result");
-
-    input.addEventListener("keydown", e => {
-        if (e.key === "Enter") btn.click();
-    });
-
-    btn.addEventListener("click", () => {
-        const id = input.value.trim();
-        if (!id) {
-            result.innerHTML = "<p style='color:red'>Please enter a Certificate ID.</p>";
-            return;
-        }
-
-        result.innerHTML = `<p class="processing">Checking official records…</p>`;
-
-        db.ref(`institutes/${slug}/certificates/${id}`).once("value")
+    db.ref("Certificate_ID/" + id).once("value")
         .then(snap => {
             const d = snap.val();
             if (!d) {
                 result.innerHTML = `
-                <div class="result-card">
-                    <div class="badge invalid">Invalid Certificate</div>
-                    <p>No certificate found with the provided ID.</p>
-                </div>`;
+                    <div class="result-card">
+                        <div class="badge invalid">Invalid Certificate</div>
+                        <p>No record found for the entered Certificate ID.</p>
+                    </div>`;
                 return;
             }
 
             result.innerHTML = `
-            <div class="result-card">
-                <div class="badge valid">Verified Certificate</div>
-                <p><strong>Name:</strong> ${d.name}</p>
-                <p><strong>Program:</strong> ${d.course}</p>
-                <p><strong>Issue Date:</strong> ${d.issue_date}</p>
-                <p><strong>Status:</strong> ${d.status}</p>
-                <div class="cert-image">
-                    <img src="${d.image}" />
-                </div>
-            </div>`;
+                <div class="result-card">
+                    <div class="badge valid">Verified Certificate</div>
+                    <p><strong>Name:</strong> ${d.name}</p>
+                    <p><strong>Program:</strong> ${d.internship_title}</p>
+                    <p><strong>Issue Date:</strong> ${d.issue_date}</p>
+                    <p><strong>Status:</strong> ${d.status}</p>
+                    <div class="cert-image">
+                        <img src="${d.Image_url}" alt="Certificate">
+                    </div>
+                </div>`;
         })
         .catch(() => {
-            result.innerHTML = "<p style='color:red'>Unable to fetch certificate.</p>";
+            result.innerHTML = "<p style='color:red;'>Unable to verify at this time.</p>";
         });
-    });
-});
+}
 </script>
 
 </body>
